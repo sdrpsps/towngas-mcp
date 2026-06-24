@@ -1,6 +1,6 @@
 {
   "name": "towngas-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "港华燃气 MCP server，附带调试 CLI 和 TypeScript SDK。",
   "type": "module",
   "packageManager": "pnpm@10.33.0",

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/sdrpsps/towngas-mcp/compare/v1.0.1...v1.0.2) (2026-06-24)
+
+
+### Bug Fixes
+
+* include pnpm workspace config in docker build ([955e522](https://github.com/sdrpsps/towngas-mcp/commit/955e5229d70a7f96a358e9a1aa6a8643040e3d7f))
+
 ## [1.0.1](https://github.com/sdrpsps/towngas-mcp/compare/v1.0.0...v1.0.1) (2026-06-24)
 
 
