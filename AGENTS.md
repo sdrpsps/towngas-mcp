@@ -100,7 +100,8 @@ TOWNGAS_REFRESH_TOKEN
 - Versioning is managed by release-please. Use Conventional Commits (`fix:`, `feat:`, `feat!:`/`BREAKING CHANGE`) so release-please can open release PRs that update `package.json` and `CHANGELOG.md`.
 - `.github/workflows/release-please.yml` runs on pushes to `main` and uses the simple `release-type: node` configuration. Do not add release-please manifest/config files unless the repository becomes multi-package or needs advanced release settings.
 - Do not manually bump `package.json` version or hand-create release tags for normal releases. Merge the release-please PR; it creates the `v*.*.*` tag and GitHub Release.
-- GitHub Actions Docker release workflow is `.github/workflows/docker-release.yml`; it runs on `v*.*.*` tags, syncs `package.json` version from the tag in the build workspace, builds `linux/amd64` and `linux/arm64`, and pushes to GHCR.
+- Release-please-created tags may not trigger separate workflows when created with `GITHUB_TOKEN`. Therefore `.github/workflows/release-please.yml` also builds and pushes GHCR images when `release_created == true`.
+- GitHub Actions Docker release workflow is `.github/workflows/docker-release.yml`; it remains available for manually pushed `v*.*.*` tags or `workflow_dispatch` with a tag input, syncs `package.json` version from the tag in the build workspace, builds `linux/amd64` and `linux/arm64`, and pushes to GHCR.
 - MCP server version should follow package version. `src/mcp/server.ts` reads root `package.json`; keep `package.json` copied into Docker runtime images.
 
 ## Maintenance Rules

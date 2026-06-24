@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Version tag to publish, for example v1.0.0
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -15,8 +21,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Resolve release tag
+        id: release-tag
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            TAG_NAME="${INPUT_TAG}"
+          else
+            TAG_NAME="${GITHUB_REF_NAME}"
+          fi
+          VERSION="${TAG_NAME#v}"
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.release-tag.outputs.tag_name }}
 
       - name: Set image name
         run: echo "IMAGE_NAME=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/towngas-mcp" >> "$GITHUB_ENV"
@@ -34,9 +56,11 @@ jobs:
 
       - name: Sync package version from tag
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${RELEASE_VERSION}"
           node scripts/set-version.mjs "$VERSION"
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+        env:
+          RELEASE_VERSION: ${{ steps.release-tag.outputs.version }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -63,10 +87,10 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=tag
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=raw,value=${{ steps.release-tag.outputs.tag_name }}
+            type=semver,pattern={{version}},value=${{ steps.release-tag.outputs.tag_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.release-tag.outputs.tag_name }}
+            type=semver,pattern={{major}},value=${{ steps.release-tag.outputs.tag_name }}
             type=raw,value=latest
           labels: |
             org.opencontainers.image.title=towngas-mcp
