@@ -1,0 +1,45 @@
+{
+  "name": "towngas-mcp",
+  "version": "1.0.0",
+  "description": "港华燃气 MCP server，附带调试 CLI 和 TypeScript SDK。",
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    },
+    "./mcp-server": {
+      "types": "./dist/src/mcp/server.d.ts",
+      "import": "./dist/src/mcp/server.js"
+    }
+  },
+  "bin": {
+    "towngas": "./dist/src/cli/towngas.js",
+    "towngas-mcp": "./dist/src/cli/towngas-mcp.js"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:docker": "node scripts/build-docker.mjs",
+    "check": "pnpm run build && node --check dist/src/**/*.js dist/test/*.test.js",
+    "prepack": "pnpm run build",
+    "test": "pnpm run build && node --test dist/test/*.test.js",
+    "towngas": "node ./dist/src/cli/towngas.js",
+    "towngas:mcp": "node ./dist/src/cli/towngas-mcp.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^17.4.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "esbuild": "^0.28.1",
+    "typescript": "^6.0.3"
+  }
+}
