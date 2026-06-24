@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "港华燃气 MCP server，附带调试 CLI 和 TypeScript SDK。",
   "type": "module",
+  "packageManager": "pnpm@10.33.0",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "exports": {

@@ -93,6 +93,7 @@ TOWNGAS_REFRESH_TOKEN
 
 - Use `pnpm`; do not restore `package-lock.json`.
 - Keep `pnpm-lock.yaml` current after dependency changes.
+- Docker builds must copy `pnpm-workspace.yaml` before `pnpm install`; it contains the approved build-script policy for `esbuild`.
 - Keep package exports narrow: `.` and `./mcp-server`.
 - Keep package name and description aligned with MCP-first positioning.
 - Normal package build must not bundle dependencies; `pnpm run build` emits ESM files for Node.js 20+. Docker is the exception and uses a single-file MCP bundle.
