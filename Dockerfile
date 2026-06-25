@@ -24,5 +24,7 @@ COPY --from=build --chown=node:node /app/package.json ./package.json
 COPY --from=build --chown=node:node /app/dist/docker ./dist/docker
 
 USER node
+EXPOSE 3000
 
 ENTRYPOINT ["node", "/app/dist/docker/towngas-mcp.js"]
+CMD ["--listen-host", "0.0.0.0", "--port", "3000"]

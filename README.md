@@ -55,16 +55,29 @@ MCP server、调试 CLI 和附带 SDK 都支持从环境变量读取默认配置
 
 ## MCP Server
 
-启动 stdio MCP server：
+启动 Streamable HTTP MCP server：
 
 ```bash
 towngas-mcp
 ```
 
-也可以使用 Docker 镜像：
+默认监听本机 `127.0.0.1:3000`。需要对容器或局域网开放时，显式设置监听地址：
 
 ```bash
-docker run --rm -i \
+towngas-mcp --listen-host 0.0.0.0 --port 3000
+```
+
+HTTP MCP endpoint 默认为：
+
+```text
+http://localhost:3000/mcp
+```
+
+Docker 镜像默认启动 Streamable HTTP server，监听容器内 `0.0.0.0:3000`：
+
+```bash
+docker run --rm \
+  -p 3000:3000 \
   -e TOWNGAS_HOST=https://your-company.towngasvcc.com \
   -e TOWNGAS_ORG_CODE=YOUR_ORG_CODE \
   -e TOWNGAS_SUBS_CODE=YOUR_SUBS_CODE \

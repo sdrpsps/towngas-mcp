@@ -8,6 +8,7 @@ import {
   createTowngasMcpServer,
   createTowngasToolContext,
   resolveTowngasConfig,
+  runTowngasMcpHttpServer,
   sanitizeToolResult,
   TOWNGAS_TOOL_DEFINITIONS,
   toMcpToolResult
@@ -137,6 +138,32 @@ test("toMcpToolResult returns structured content and text content", () => {
 test("createTowngasMcpServer creates an MCP server instance", () => {
   const server = createTowngasMcpServer();
   assert.equal(server.isConnected(), false);
+});
+
+test("runTowngasMcpHttpServer starts a Streamable HTTP endpoint", async (t) => {
+  let server;
+  try {
+    server = await runTowngasMcpHttpServer({
+      listenHost: "127.0.0.1",
+      port: 0
+    });
+  } catch (error) {
+    if (error?.code === "EPERM") {
+      t.skip("sandbox does not allow opening a local listener");
+      return;
+    }
+    throw error;
+  }
+
+  try {
+    assert.match(server.url, /^http:\/\/127\.0\.0\.1:\d+\/mcp$/);
+
+    const response = await fetch(server.url.replace(/\/mcp$/, "/health"));
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { ok: true });
+  } finally {
+    await server.close();
+  }
 });
 
 test("createTowngasMcpServer registers output schemas for every tool", () => {

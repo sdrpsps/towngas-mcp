@@ -154,6 +154,10 @@ Important error codes:
 
 TypeScript return types live in `src/client/types.ts`. MCP `outputSchema` definitions live in `src/mcp/schemas.ts`.
 
+MCP uses Streamable HTTP and serves the MCP endpoint at `/mcp` by default. The CLI
+listens on `127.0.0.1:3000` unless overridden; Docker images listen on
+`0.0.0.0:3000`.
+
 Business MCP tools return:
 
 ```json

@@ -4,7 +4,7 @@ This file is a compact working card for coding agents. Keep it short and verifia
 
 ## Project
 
-- Primary product: stdio MCP server for authenticated Towngas account queries.
+- Primary product: Streamable HTTP MCP server for authenticated Towngas account queries.
 - Secondary tools: debug CLI and a small TypeScript SDK.
 - Package exports are intentionally narrow: keep `.` for the secondary SDK and `./mcp-server` for advanced MCP embedding. Do not expose `client`, `config`, or `tools` subpaths unless the user explicitly asks to make them public API.
 
@@ -27,7 +27,7 @@ pnpm towngas:mcp
 
 - `src/client/towngas-client.ts`: protocol client, auth refresh, retry, high-level API methods.
 - `src/client/`: URL construction, response parsing, sequence generation, constants, response types.
-- `src/mcp/server.ts`: stdio MCP server registration.
+- `src/mcp/server.ts`: Streamable HTTP MCP server registration.
 - `src/mcp/schemas.ts`: MCP `outputSchema` definitions.
 - `src/shared/config.ts`: env and `.env` config resolution.
 - `src/shared/tools.ts`: MCP tool execution, metadata, token stripping.
@@ -56,6 +56,7 @@ TOWNGAS_REFRESH_TOKEN
 
 - Keep MCP thin: parameter validation, output schema, metadata, and token redaction belong in MCP/shared tools.
 - Keep protocol work in `TowngasClient`: network requests, URL building, response parsing, auth refresh, retry, and token expiry handling.
+- MCP uses Streamable HTTP only. Do not re-add stdio, SSE, or REST endpoints unless the user explicitly asks.
 - Current MCP tools:
   - `towngas_get_bound_accounts`
   - `towngas_get_bills`
@@ -98,6 +99,7 @@ TOWNGAS_REFRESH_TOKEN
 - Keep package name and description aligned with MCP-first positioning.
 - Normal package build must not bundle dependencies; `pnpm run build` emits ESM files for Node.js 20+. Docker is the exception and uses a single-file MCP bundle.
 - Docker runtime image is built from the `dist/docker/towngas-mcp.js` bundle created by `pnpm run build:docker`; do not copy `node_modules` into the runtime stage.
+- `compose.yaml` is the default Docker Compose deployment example and must keep using Streamable HTTP on port 3000 with env-based secrets.
 - Versioning is managed by release-please. Use Conventional Commits (`fix:`, `feat:`, `feat!:`/`BREAKING CHANGE`) so release-please can open release PRs that update `package.json` and `CHANGELOG.md`.
 - `.github/workflows/release-please.yml` runs on pushes to `main` and uses the simple `release-type: node` configuration. Do not add release-please manifest/config files unless the repository becomes multi-package or needs advanced release settings.
 - Do not manually bump `package.json` version or hand-create release tags for normal releases. Merge the release-please PR; it creates the `v*.*.*` tag and GitHub Release.

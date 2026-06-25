@@ -40,8 +40,14 @@ export {
 
 export {
   createTowngasMcpServer,
+  runTowngasMcpHttpServer,
   runTowngasMcpServer,
   toMcpToolResult
+} from "./mcp/server.js";
+
+export type {
+  TowngasMcpHttpServer,
+  TowngasMcpHttpServerOptions
 } from "./mcp/server.js";
 
 export type {
