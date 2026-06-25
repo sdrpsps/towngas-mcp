@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/sdrpsps/towngas-mcp/compare/v1.0.2...v1.1.0) (2026-06-25)
+
+
+### Features
+
+* serve MCP over streamable HTTP ([ce7f7a2](https://github.com/sdrpsps/towngas-mcp/commit/ce7f7a2f90988b1fa0df86018195c7106e3cc812))
+
 ## [1.0.2](https://github.com/sdrpsps/towngas-mcp/compare/v1.0.1...v1.0.2) (2026-06-24)
 
 
