@@ -153,7 +153,6 @@ export async function runTowngasMcpHttpServer(
     close: async () => {
       for (const session of Array.from(sessions.values())) {
         await session.server.close();
-        await session.transport.close();
       }
       sessions.clear();
       await new Promise<void>((resolve, reject) => {
@@ -256,7 +255,6 @@ function createHttpMcpSession(
     },
     onsessionclosed: async (sessionId) => {
       sessions.delete(sessionId);
-      await session.server.close();
     }
   });
 
@@ -268,7 +266,6 @@ function createHttpMcpSession(
     if (sessionId) {
       sessions.delete(sessionId);
     }
-    server.close().catch((error) => console.error(error.stack ?? error.message));
   };
 
   return session;

@@ -166,6 +166,51 @@ test("runTowngasMcpHttpServer starts a Streamable HTTP endpoint", async (t) => {
   }
 });
 
+test("runTowngasMcpHttpServer can close an initialized session without recursion", async (t) => {
+  let server;
+  try {
+    server = await runTowngasMcpHttpServer({
+      listenHost: "127.0.0.1",
+      port: 0
+    });
+  } catch (error) {
+    if (error?.code === "EPERM") {
+      t.skip("sandbox does not allow opening a local listener");
+      return;
+    }
+    throw error;
+  }
+
+  const initializeResponse = await fetch(server.url, {
+    method: "POST",
+    headers: {
+      accept: "application/json, text/event-stream",
+      "content-type": "application/json"
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2025-03-26",
+        capabilities: {},
+        clientInfo: {
+          name: "towngas-test",
+          version: "1.0.0"
+        }
+      }
+    })
+  });
+
+  try {
+    assert.equal(initializeResponse.status, 200);
+    assert.ok(initializeResponse.headers.get("mcp-session-id"));
+    await server.close();
+  } finally {
+    await initializeResponse.body?.cancel().catch(() => {});
+  }
+});
+
 test("createTowngasMcpServer registers output schemas for every tool", () => {
   const server = createTowngasMcpServer();
   const registeredTools = (server as any)._registeredTools;
