@@ -43,6 +43,9 @@ const TOOL_SCHEMAS: any = {
   }
 };
 
+const CORS_ALLOW_HEADERS = "content-type, mcp-session-id, mcp-protocol-version, last-event-id";
+const CORS_EXPOSE_HEADERS = "mcp-session-id, mcp-protocol-version";
+
 export function createTowngasMcpServer(options: any = {}) {
   const server = new McpServer({
     name: "towngas-client",
@@ -181,6 +184,8 @@ async function handleMcpHttpRequest({
 }) {
   const requestPath = new URL(request.url ?? "/", "http://localhost").pathname;
 
+  applyCorsHeaders(response);
+
   if (request.method === "GET" && requestPath === "/health") {
     writeJson(response, 200, { ok: true });
     return;
@@ -300,12 +305,9 @@ function getHeader(request: IncomingMessage, name: string) {
 
 function writeCorsPreflight(response: ServerResponse) {
   response.statusCode = 204;
-  response.setHeader("Access-Control-Allow-Origin", "*");
+  applyCorsHeaders(response);
   response.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
-  response.setHeader(
-    "Access-Control-Allow-Headers",
-    "content-type, mcp-session-id, last-event-id"
-  );
+  response.setHeader("Access-Control-Allow-Headers", CORS_ALLOW_HEADERS);
   response.end();
 }
 
@@ -327,7 +329,7 @@ function writeJson(response: ServerResponse, status: number, value: unknown) {
     return;
   }
   response.statusCode = status;
-  response.setHeader("Access-Control-Allow-Origin", "*");
+  applyCorsHeaders(response);
   response.setHeader("Content-Type", "application/json");
   response.end(JSON.stringify(value));
 }
@@ -337,8 +339,17 @@ function writeText(response: ServerResponse, status: number, value: string) {
     return;
   }
   response.statusCode = status;
+  applyCorsHeaders(response);
   response.setHeader("Content-Type", "text/plain");
   response.end(value);
+}
+
+function applyCorsHeaders(response: ServerResponse) {
+  if (response.headersSent) {
+    return;
+  }
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  response.setHeader("Access-Control-Expose-Headers", CORS_EXPOSE_HEADERS);
 }
 
 export function toMcpToolResult(value: any) {

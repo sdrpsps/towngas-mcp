@@ -160,6 +160,7 @@ test("runTowngasMcpHttpServer starts a Streamable HTTP endpoint", async (t) => {
 
     const response = await fetch(server.url.replace(/\/mcp$/, "/health"));
     assert.equal(response.status, 200);
+    assert.equal(response.headers.get("access-control-expose-headers"), "mcp-session-id, mcp-protocol-version");
     assert.deepEqual(await response.json(), { ok: true });
   } finally {
     await server.close();
@@ -205,6 +206,10 @@ test("runTowngasMcpHttpServer can close an initialized session without recursion
   try {
     assert.equal(initializeResponse.status, 200);
     assert.ok(initializeResponse.headers.get("mcp-session-id"));
+    assert.equal(
+      initializeResponse.headers.get("access-control-expose-headers"),
+      "mcp-session-id, mcp-protocol-version"
+    );
     await server.close();
   } finally {
     await initializeResponse.body?.cancel().catch(() => {});
