@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/sdrpsps/towngas-mcp/compare/v1.1.1...v1.1.2) (2026-06-26)
+
+
+### Bug Fixes
+
+* harden streamable HTTP sessions behind proxies ([adf9ad8](https://github.com/sdrpsps/towngas-mcp/commit/adf9ad88c147094626df764dcf04f37b3faa394e))
+
 ## [1.1.1](https://github.com/sdrpsps/towngas-mcp/compare/v1.1.0...v1.1.1) (2026-06-26)
 
 
