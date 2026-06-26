@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/sdrpsps/towngas-mcp/compare/v1.1.0...v1.1.1) (2026-06-26)
+
+
+### Bug Fixes
+
+* prevent MCP session close recursion ([3fd0f58](https://github.com/sdrpsps/towngas-mcp/commit/3fd0f5863f49b9b64440ae1f216b26087eaa9538))
+
 ## [1.1.0](https://github.com/sdrpsps/towngas-mcp/compare/v1.0.2...v1.1.0) (2026-06-25)
 
 
